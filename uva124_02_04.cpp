@@ -37,23 +37,22 @@ void alltopo(vector<int> g[],vector<bool> &visited,vector<int> &indeg,vector<int
 			return;
 		}
 		
-		for(int i = 0; i < ans.size()-1; i++){
-			cout << vc[ans[i]] << " ";
+		for(int i = 0; i < ans.size(); i++){
+			cout << vc[ans[i]];
 		}
-		cout << vc[ans[ans.size()-1]];
 		cout << endl;
 	}
 }
 
 int main() {
 	ALLONS_Y;
-	int t;
-	cin >> t;
-	cin.ignore();
-	while(t--){
-		cin.ignore();		
-		string line;	
-		getline(cin,line);
+	string line;
+	
+	int st = 0;
+	while(getline(cin,line)){
+
+		if(st != 0) cout << endl;
+		st++;
 
 		int i = 0; 
 		while(i < line.size()){
@@ -91,8 +90,6 @@ int main() {
 		vc.clear();
 		mvc.clear();
 
-		if(t != 0)
-			cout << endl;
 	}
 		
 	return 0;
