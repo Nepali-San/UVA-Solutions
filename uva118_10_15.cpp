@@ -11,62 +11,61 @@ char orient[] = {'N','E','S','W'};
 int xd[] = {0, 1, 0,-1};
 int yd[] = {1, 0,-1, 0};
 
-bool isLost(int x,int y,int bx,int by){
-	if(x >= 0 && x <= bx && y >= 0 && y <= by) return false;
-	return true;
+inline bool checkLost(int x,int y , int w ,int l){
+	if(x == -1 || x == l+1 || y == -1 || y == w+1) return true;	
+	return false;
 }
 
 int main() {
 	ALLONS_Y;
 	
-	int x,y;
-	cin >> x >> y;
+	int mx,my;
+	cin >> mx >> my;
 
-	int c_x,c_y; char c_o;
-	string s;
-	int pos;
-	set<pair<int,int> > st;
+	int rx,ry,fn;
+	char face;
+	set<pair<int,int> > safed;
 
-	while(cin >> c_x >> c_y >> c_o){
-	
-		if(c_o == 'N')       pos = 0;
-		else if(c_o == 'E')  pos = 1;
-		else if(c_o == 'S')  pos = 2;
-		else                 pos = 3;
+	bool isLost;
+	int isSafe;
+
+	while(cin >> rx >> ry >> face){
 		
-		bool lost = false;
-		int safe = 0;
+		isLost = false;		
+		isSafe = 0;
 
-		cin >> s;
-		for(int i= 0; i < s.size(); i++){
-			if(s[i] == 'L'){
-				pos--;
-				if(pos < 0) pos = 3;			
-			}else if(s[i] == 'R'){
-				pos = (pos + 1) % 4;
-			}else{	
-				lost = isLost(c_x+xd[pos],c_y+yd[pos],x,y);
-				safe = st.count(mp(c_x,c_y));
+		for(int i = 0; i < 4; i++) 
+			if(face == orient[i]){
+				 fn = i;
+				 break;
+			}
 
-				if(lost){
+		string input;
+		cin >> input;
 
-					if(safe){																
-						lost = false;
-						continue;
+		for(int i = 0; i < input.size(); i++){
+			if(input[i] == 'L'){				
+				fn = (fn-1);
+				if(fn < 0) fn = 3;
+			}else if(input[i] == 'R'){
+				fn = (fn+1)%4;
+			}else{
+				isLost = checkLost(rx+xd[fn],ry+yd[fn],my,mx);
+				if(isLost){
+					isSafe = safed.count(mp(rx,ry));					
+					if(!isSafe){											
+						safed.insert(mp(rx,ry));
+						cout << rx << " " << ry << " " << orient[fn] << " LOST" << endl;					
+						break;
 					}
-
-					st.insert(mp(c_x,c_y));
-					cout << c_x << " " << c_y << " " << orient[pos]  << " LOST" << endl;			
-					break;
-				}		
-							
-				c_x += xd[pos];
-				c_y += yd[pos];
-			}		
+					isLost = false;
+				}else{					
+					rx += xd[fn];
+					ry += yd[fn];					
+				}				
+			}			
 		}
-		if(lost) continue;	
-		cout << c_x << " " << c_y << " " << orient[pos] << endl;
-	}
-
+		if(!isLost) cout << rx << " " << ry << " " << orient[fn] << endl;		
+	}		
 	return 0;
 }
